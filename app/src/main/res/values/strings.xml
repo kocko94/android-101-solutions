@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Android101 Solutions</string>
+    <string name="dialog_title">Warning</string>
+    <string name="dialog_message">"You are about the exit my awesome app. Are you sure about it? 😭"</string>
+    <string name="dialog_btn_positive">The love is gone</string>
+    <string name="dialog_btn_negative">I will stay</string>
 </resources>
