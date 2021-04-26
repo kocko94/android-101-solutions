@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Android101 Solutions</string>
+
+    <string name="persist">Persist</string>
+    <string name="retrieve">Retrieve</string>
+    <string name="delete">Delete</string>
+    <string name="hint">Type something</string>
+
 </resources>
