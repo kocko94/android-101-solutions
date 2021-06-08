@@ -8,15 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public static String KEY_CALCULATED_NUMBER = "calculatedNumber";
 
-    private final List<Integer> numbers = new ArrayList<>();
-    private String currentNumber = "";
     private TextView formulaView;
 
     @Override
@@ -30,24 +29,28 @@ public class MainActivity extends AppCompatActivity {
     private void setupViews() {
         formulaView = findViewById(R.id.formulaView);
 
-        findViewById(R.id.button1).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button2).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button3).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button4).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button5).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button6).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button7).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button8).setOnClickListener(v -> onNumberClicked((Button) v));
-        findViewById(R.id.button9).setOnClickListener(v -> onNumberClicked((Button) v));
+        findViewById(R.id.button1).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button2).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button3).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button4).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button5).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button6).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button7).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button8).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.button9).setOnClickListener(v -> appendTextToScreen((Button) v));
+        findViewById(R.id.plus).setOnClickListener(v -> appendTextToScreen((Button) v));
 
-        findViewById(R.id.plus).setOnClickListener(this::onPlusButtonClicked);
         findViewById(R.id.clear).setOnClickListener(this::onClearButtonClicked);
         findViewById(R.id.equal).setOnClickListener(this::onEqualButtonClicked);
     }
 
+    private void appendTextToScreen(Button viewToAppendFrom) {
+        CharSequence currentText = formulaView.getText();
+        formulaView.setText(String.format("%s%s", currentText, viewToAppendFrom.getText()));
+    }
+
     private void onEqualButtonClicked(View view) {
-        addCurrentNumberToValues();
-        int sum = calculateSumFor(numbers);
+        int sum = calculateSum();
 
         Intent intent = new Intent(this, ResultActivity.class);
         intent.putExtra(KEY_CALCULATED_NUMBER, sum);
@@ -55,45 +58,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onClearButtonClicked(View view) {
-        numbers.clear();
-        clearCurrentNumber();
         formulaView.setText(null);
     }
 
-    private void onPlusButtonClicked(View button) {
-        addCurrentNumberToValues();
-        appendTextToFormulaView("+");
-        clearCurrentNumber();
-    }
-
-    private void addCurrentNumberToValues() {
-        Integer value = Integer.valueOf(currentNumber);
-        numbers.add(value);
-    }
-
-    private void clearCurrentNumber() {
-        currentNumber = "";
-    }
-
-    private void onNumberClicked(Button origin) {
-        CharSequence buttonText = origin.getText();
-
-        currentNumber += buttonText;
-
-        appendTextToFormulaView(buttonText);
-    }
-
-    private void appendTextToFormulaView(CharSequence buttonText) {
-        CharSequence currentText = formulaView.getText();
-        formulaView.setText(String.format("%s%s",currentText, buttonText));
-    }
-
-    private int calculateSumFor(List<Integer> numbers) {
+    private int calculateSum() {
+        List<String> numbers = extractNumbersFrom(formulaView);
         int result = 0;
-        for(int number: numbers) {
-            result += number;
+        for (String number : numbers) {
+            result += Integer.parseInt(number);
         }
         return result;
+    }
+
+    private List<String> extractNumbersFrom(TextView formulaView) {
+        String[] numbers = formulaView.getText().toString().split("\\+");
+        if (numbers.length > 0 && !numbers[0].isEmpty()) {
+            return Arrays.asList(numbers);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
 }
