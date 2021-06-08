@@ -23,7 +23,8 @@ import java.util.List;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder> {
     private final int TYPE_TITLE = 1;
-    private final int TYPE_CONTENT = 2;
+    private final int TYPE_CONTENT_LEFT = 2;
+    private final int TYPE_CONTENT_RIGHT = 3;
 
     private List<DummyData> data;
 
@@ -40,7 +41,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder
     public int getItemViewType(int position) {
         switch (data.get(position).getType()) {
             case TITLE: return TYPE_TITLE;
-            case CONTENT: return TYPE_CONTENT;
+            case CONTENT_LEFT: return TYPE_CONTENT_LEFT;
+            case CONTENT_RIGHT: return TYPE_CONTENT_RIGHT;
             default: throw new RuntimeException(String.format("Not described data type '%s'", data.get(position).getType()));
         }
     }
@@ -53,10 +55,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder
                 View parentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_title, parent, false);
                 return new TitleViewHolder(parentView);
             }
-            case TYPE_CONTENT: {
-                View parentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_content, parent, false);
-                return new ContentViewHolder(parentView);
+            case TYPE_CONTENT_LEFT: {
+                View parentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_content_left, parent, false);
+                return new ContentLeftViewHolder(parentView);
             }
+            case TYPE_CONTENT_RIGHT: {
+                View parentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_content_right, parent, false);
+                return new ContentRightViewHolder(parentView);
+            }
+
             default: throw new RuntimeException(String.format("Not implemented view type '%d'", viewType));
         }
     }
@@ -79,9 +86,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder
         public abstract void bind(DummyData data);
     }
 
-    static class ContentViewHolder extends BaseViewHolder {
+    static class ContentLeftViewHolder extends BaseViewHolder {
 
-        public ContentViewHolder(@NonNull View itemView) {
+        public ContentLeftViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
@@ -108,6 +115,26 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder
                     .error(R.drawable.image_error)
                     .placeholder(R.drawable.image_placeholder)
                     .into(getImageView());
+            getTitleView().setText(data.getTitle());
+            getDescriptionView().setText(data.getDescription());
+        }
+    }
+
+    static class ContentRightViewHolder extends BaseViewHolder {
+
+        public ContentRightViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+        private TextView getTitleView() {
+            return super.itemView.findViewById(R.id.title);
+        }
+
+        private TextView getDescriptionView() {
+            return super.itemView.findViewById(R.id.description);
+        }
+
+        @Override
+        public void bind(DummyData data) {
             getTitleView().setText(data.getTitle());
             getDescriptionView().setText(data.getDescription());
         }

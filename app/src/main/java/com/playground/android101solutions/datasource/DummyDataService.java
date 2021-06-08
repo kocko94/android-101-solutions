@@ -22,13 +22,18 @@ public class DummyDataService {
 
     private void fillWithDummyData(int amount) {
         int initialDimension = 48; //needed only to make different urls
-        Type dataType = Type.CONTENT;
         for (int i = 0; i <= amount; i++) {
             if (i % 5 == 0) {
-                data.add(new DummyData(null,"Big title " + (i + 1), null, Type.TITLE));
-            }
-            else {
-                data.add(new DummyData("https://picsum.photos/"+(initialDimension+i), "Dummy title "+(i+1), "Dummy description "+(i+1), Type.CONTENT));
+                data.add(new DummyData(null, "Big title " + (i + 1), null, Type.TITLE));
+            } else if (i % 3 == 0) {
+                data.add(new DummyData(null,
+                        "Big title " + (i + 1), "Left aligned description " + (i + 1),
+                        Type.CONTENT_RIGHT));
+            } else {
+                data.add(new DummyData("https://picsum.photos/" + (initialDimension + i),
+                        "Dummy title " + (i + 1),
+                        "Dummy description " + (i + 1),
+                        Type.CONTENT_LEFT));
             }
         }
     }
